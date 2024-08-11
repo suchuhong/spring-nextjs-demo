@@ -1,0 +1,28 @@
+server:
+  port: 8999
+spring:
+  application:
+    name: backend
+  # spring provided properties
+  datasource:
+    url: jdbc:mysql://${app.database.host}:${app.database.port}/${app.database.name}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=FALSE
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:  ${app.database.username}
+    password: ${app.database.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+# Database connection properties. The default values should work with the docker-compose file provided in the repository
+# If you want to change this, make sure to also update the docker-compose file accordingly
+app:
+  database:
+    name: starter-kit-db
+    username: user
+    password: password
+    host: localhost
+    port: 3316
