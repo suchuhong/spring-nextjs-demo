@@ -26,3 +26,16 @@ app:
     password: password
     host: localhost
     port: 3316
+  allowed-origins: http://localhost
+
+  #common logging levels that you might want to use in development, just uncomment the ones you want to use and set the level you want
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+  #logging.level.org.springframework.web=INFO
+  #logging.level.org.hibernate=TRACE
+  #logging.level.org.hibernate.type.descriptor.sql=trace
+  #logging.level.org.hibernate.SQL=DEBUG
+  #logging.level.org.hibernate.type=TRACE
