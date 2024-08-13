@@ -17,6 +17,18 @@ spring:
       hibernate:
         jdbc:
           time_zone: UTC
+  mail:
+    host: localhost
+    port: 1025
+    username: user
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 # Database connection properties. The default values should work with the docker-compose file provided in the repository
 # If you want to change this, make sure to also update the docker-compose file accordingly
 app:
@@ -27,6 +39,16 @@ app:
     host: localhost
     port: 3316
   allowed-origins: http://localhost
+  application-name: starter-kit
+  base-url: http://localhost:8999
+
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
+      port: 8899
 
   #common logging levels that you might want to use in development, just uncomment the ones you want to use and set the level you want
 logging:

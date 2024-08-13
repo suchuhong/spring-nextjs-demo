@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToOne;
 
 @Entity
 @SQLUpdate(sql = "ALTER TABLE my_table ENGINE=InnoDB")
@@ -30,6 +31,10 @@ public class User extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     @Setter
     private Role role;
+
+    @Setter
+    @OneToOne(mappedBy = "user")
+    private VerificationCode verificationCode;
 
 
     public User(CreateUserRequest data) {
