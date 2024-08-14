@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -14,12 +16,14 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToOne;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @SQLUpdate(sql = "ALTER TABLE my_table ENGINE=InnoDB")
 @Getter
 @NoArgsConstructor
-public class User extends AbstractEntity {
+public class User extends AbstractEntity implements UserDetails {
     private String email;
     private String password;
     private String firstName;
@@ -44,5 +48,37 @@ public class User extends AbstractEntity {
         this.firstName = data.getFirstName();
         this.lastName = data.getLastName();
         this.role = Role.USER;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    // If you want to not allow the user to login before verifying their email, you can change this to
+    // return verified;
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

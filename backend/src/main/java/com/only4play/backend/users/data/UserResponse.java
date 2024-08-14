@@ -3,8 +3,10 @@ package com.only4play.backend.users.data;
 import com.only4play.backend.users.Role;
 import com.only4play.backend.users.User;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Data
