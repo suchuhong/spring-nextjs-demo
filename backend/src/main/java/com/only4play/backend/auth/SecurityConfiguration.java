@@ -35,6 +35,7 @@ public class SecurityConfiguration {
     http.authorizeRequests()
             .antMatchers(HttpMethod.POST, "/api/users").permitAll()
             .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/users/forgot-password").permitAll()
             .antMatchers(HttpMethod.GET, "/api/users/verify-email").permitAll()
             .anyRequest().authenticated();
 

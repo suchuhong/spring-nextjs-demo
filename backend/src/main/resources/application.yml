@@ -5,7 +5,7 @@ spring:
     name: backend
   # spring provided properties
   datasource:
-    url: jdbc:mysql://${app.database.host}:${app.database.port}/${app.database.name}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=FALSE
+    url: jdbc:mysql://${app.database.host}:${app.database.port}/${app.database.name}?serverTimezone=UTC&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=FALSE
     driver-class-name: com.mysql.cj.jdbc.Driver
     username:  ${app.database.username}
     password: ${app.database.password}

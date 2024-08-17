@@ -2,6 +2,7 @@ package com.only4play.backend.users.controller;
 
 import com.only4play.backend.config.ApplicationProperties;
 import com.only4play.backend.users.data.CreateUserRequest;
+import com.only4play.backend.users.data.ForgotPasswordRequest;
 import com.only4play.backend.users.data.UserResponse;
 import com.only4play.backend.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,15 @@ public class UsersController {
     public RedirectView verifyEmail(@RequestParam String token) {
         userService.verifyEmail(token);
         return new RedirectView(applicationProperties.getLoginPageUrl());
+    }
+
+    /**
+     * Request a password reset email
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {
+        userService.forgotPassword(req.getEmail());
+        return ResponseEntity.ok().build();
     }
 
 }
