@@ -4,6 +4,7 @@ import com.only4play.backend.config.ApplicationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -36,6 +37,19 @@ public class SecurityConfiguration {
             .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
             .antMatchers(HttpMethod.GET, "/api/users/verify-email").permitAll()
             .anyRequest().authenticated();
+
+    http.exceptionHandling(customizer -> {
+      customizer.authenticationEntryPoint(
+              (request, response, authException) -> {
+                String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+                if(acceptHeader != null && acceptHeader.contains("application/json")) {
+                  response.setStatus(401);
+                } else {
+                  response.sendRedirect(applicationProperties.getLoginPageUrl());
+                }
+              });
+    });
+
 
     http.addFilterBefore(new UsernamePasswordAuthenticationFilter(), LogoutFilter.class);
     http.userDetailsService(userDetailsService);

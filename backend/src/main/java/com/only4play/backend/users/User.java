@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@SQLUpdate(sql = "ALTER TABLE my_table ENGINE=InnoDB")
 @Getter
 @NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {

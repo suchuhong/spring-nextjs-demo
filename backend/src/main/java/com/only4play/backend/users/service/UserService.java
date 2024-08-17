@@ -7,6 +7,7 @@ import com.only4play.backend.users.data.UserResponse;
 import com.only4play.backend.users.jobs.SendWelcomeEmailJob;
 import com.only4play.backend.users.repository.UserRepository;
 import com.only4play.backend.users.repository.VerificationCodeRepository;
+import com.only4play.backend.util.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.BackgroundJobRequest;
 import org.springframework.stereotype.Service;
@@ -36,4 +37,15 @@ public class UserService {
         SendWelcomeEmailJob sendWelcomeEmailJob = new SendWelcomeEmailJob(user.getId());
         BackgroundJobRequest.enqueue(sendWelcomeEmailJob);
     }
+
+    @Transactional
+    public void verifyEmail(String code) {
+        VerificationCode verificationCode = verificationCodeRepository.findByCode(code)
+                .orElseThrow(() -> ApiException.builder().status(400).message("Invalid token").build());
+        User user = verificationCode.getUser();
+        user.setVerified(true);
+        userRepository.save(user);
+        verificationCodeRepository.delete(verificationCode);
+    }
+
 }
