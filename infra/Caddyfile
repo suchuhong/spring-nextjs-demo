@@ -1,16 +1,26 @@
+# 这个配置监听 localhost 的 8080 端口
 http://localhost:8080 {
+
+    # 将所有 /api/ 开头的请求反向代理到 8999 端口的服务
+    # host.docker.internal: 这是一个特殊的 DNS 名称，
+    # 用于在 Docker 容器中访问宿主机的服务。
+    # 它通常在 Docker for Windows 和 Docker for Mac 上使用。
+    # 这个配置表明你正在使用 Docker 容器，并希望通过容器内的反向代理来访问宿主机上的服务。
     route /api/* {
         reverse_proxy http://host.docker.internal:8999
     }
 
+    # 将 OAuth2 相关的授权请求反向代理到 8999 端口的服务
     route /oauth2/authorization/* {
         reverse_proxy http://host.docker.internal:8999
     }
 
+    # 将 OAuth2 登录回调请求反向代理到 8999 端口的服务
     route /login/oauth2/code/* {
         reverse_proxy http://host.docker.internal:8999
     }
 
+    # 所有其他请求反向代理到 3000 端口的服务
     route * {
         reverse_proxy http://host.docker.internal:3000
     }
