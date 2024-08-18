@@ -2,6 +2,7 @@ package com.only4play.backend.users;
 
 import com.only4play.backend.entity.AbstractEntity;
 import com.only4play.backend.users.data.CreateUserRequest;
+import com.only4play.backend.users.data.UpdateUserRequest;
 import com.only4play.backend.util.ApplicationContextProvider;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,6 +55,10 @@ public class User extends AbstractEntity implements UserDetails {
         this.password = passwordEncoder.encode(newPassword);
     }
 
+    public void update(UpdateUserRequest request) {
+        this.firstName = request.getFirstName();
+        this.lastName = request.getLastName();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

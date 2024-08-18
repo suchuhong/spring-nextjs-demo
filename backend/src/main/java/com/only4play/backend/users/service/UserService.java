@@ -1,10 +1,12 @@
 package com.only4play.backend.users.service;
 
+import com.only4play.backend.auth.SecurityUtil;
 import com.only4play.backend.users.PasswordResetToken;
 import com.only4play.backend.users.User;
 import com.only4play.backend.users.VerificationCode;
 import com.only4play.backend.users.data.CreateUserRequest;
 import com.only4play.backend.users.data.UpdateUserPasswordRequest;
+import com.only4play.backend.users.data.UpdateUserRequest;
 import com.only4play.backend.users.data.UserResponse;
 import com.only4play.backend.users.jobs.SendResetPasswordEmailJob;
 import com.only4play.backend.users.jobs.SendWelcomeEmailJob;
@@ -14,6 +16,7 @@ import com.only4play.backend.users.repository.VerificationCodeRepository;
 import com.only4play.backend.util.exception.ApiException;
 import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.BackgroundJobRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,6 +29,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final VerificationCodeRepository verificationCodeRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponse create(@Valid CreateUserRequest request) {
@@ -76,5 +80,27 @@ public class UserService {
         user.updatePassword(request.getPassword());
         userRepository.save(user);
     }
+
+    @Transactional
+    public UserResponse update(UpdateUserRequest request) {
+        User user = SecurityUtil.getAuthenticatedUser();
+        user = userRepository.getReferenceById(user.getId());
+        user.update(request);
+        user = userRepository.save(user);
+        return new UserResponse(user);
+    }
+
+    @Transactional
+    public UserResponse updatePassword(UpdateUserPasswordRequest request) {
+        User user = SecurityUtil.getAuthenticatedUser();
+        if (user.getPassword() != null && !passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw ApiException.builder().status(400).message("Wrong password").build();
+        }
+
+        user.updatePassword(request.getPassword());
+        user = userRepository.save(user);
+        return new UserResponse(user);
+    }
+
 
 }

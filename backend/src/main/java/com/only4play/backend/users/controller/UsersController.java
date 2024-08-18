@@ -1,10 +1,7 @@
 package com.only4play.backend.users.controller;
 
 import com.only4play.backend.config.ApplicationProperties;
-import com.only4play.backend.users.data.CreateUserRequest;
-import com.only4play.backend.users.data.ForgotPasswordRequest;
-import com.only4play.backend.users.data.UpdateUserPasswordRequest;
-import com.only4play.backend.users.data.UserResponse;
+import com.only4play.backend.users.data.*;
 import com.only4play.backend.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +55,29 @@ public class UsersController {
     public ResponseEntity<Void> resetPassword(@Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
         userService.resetPassword(requestDTO);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Update an existing user.
+     * <p>
+     * Only allowed to self.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> update(@Valid @RequestBody UpdateUserRequest request) {
+        UserResponse user = userService.update(request);
+        return ResponseEntity.ok(user);
+    }
+
+    /**
+     * Update the password of an existing user.
+     * <p>
+     * Only allowed with the correct old password
+     */
+    @PatchMapping("/password")
+    public ResponseEntity<UserResponse> updatePassword(
+            @Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
+        UserResponse user = userService.updatePassword(requestDTO);
+        return ResponseEntity.ok(user);
     }
 
 
