@@ -1,6 +1,9 @@
 package com.only4play.backend.users.service;
 
 import com.only4play.backend.auth.SecurityUtil;
+import com.only4play.backend.s3.UploadedFile;
+import com.only4play.backend.s3.repository.UploadedFileRepository;
+import com.only4play.backend.s3.service.FileUploadService;
 import com.only4play.backend.users.PasswordResetToken;
 import com.only4play.backend.users.User;
 import com.only4play.backend.users.VerificationCode;
@@ -18,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.jobrunr.scheduling.BackgroundJobRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,8 @@ public class UserService {
     private final VerificationCodeRepository verificationCodeRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final FileUploadService fileUploadService;
+    private final UploadedFileRepository uploadedFileRepository;
 
     @Transactional
     public UserResponse create(@Valid CreateUserRequest request) {
@@ -99,6 +106,24 @@ public class UserService {
 
         user.updatePassword(request.getPassword());
         user = userRepository.save(user);
+        return new UserResponse(user);
+    }
+
+    public UserResponse updateProfilePicture(MultipartFile file) {
+        User user = SecurityUtil.getAuthenticatedUser();
+        UploadedFile uploadedFile = new UploadedFile(file.getOriginalFilename(), file.getSize(), user);
+        try {
+            String url = fileUploadService.uploadFile(
+                    uploadedFile.buildPath("profile-picture"),
+                    file.getBytes());
+            uploadedFile.onUploaded(url);
+            user.setProfileImageUrl(url);
+            userRepository.save(user);
+            uploadedFileRepository.save(uploadedFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return new UserResponse(user);
     }
 

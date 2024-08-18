@@ -52,6 +52,16 @@ app:
   login-page-url: ${app.base-url}/auth/login
   login-success-url: ${app.base-url}/auth/login-success
 
+  s3:
+    bucket-name: springboot-nextjs-bucket
+    access-key: f2xX1laGDPAOtVgv
+    secret-key: iHu9NBnTSloWd1scrx9zXdlu8MGMS2qyPYdLu6Bk
+  # 对象存储使用 tebi.io
+#    https://client.tebi.io/buckets/
+    base-url: http://s3.tebi.io
+    region: Germany,Europe
+    storage-class: STANDARD
+
 org:
   jobrunr:
     background-job-server:

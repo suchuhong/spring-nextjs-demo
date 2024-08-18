@@ -6,6 +6,7 @@ import com.only4play.backend.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
@@ -80,5 +81,14 @@ public class UsersController {
         return ResponseEntity.ok(user);
     }
 
-
+    /**
+     * Update users profile picture.
+     * Receives a multipart file
+     */
+    @PatchMapping("/{id}/profile-picture")
+    public ResponseEntity<UserResponse> updateProfilePicture(
+            @PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        UserResponse user = userService.updateProfilePicture(file);
+        return ResponseEntity.ok(user);
+    }
 }
