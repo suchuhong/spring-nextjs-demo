@@ -3,6 +3,7 @@ package com.only4play.backend.users.controller;
 import com.only4play.backend.config.ApplicationProperties;
 import com.only4play.backend.users.data.CreateUserRequest;
 import com.only4play.backend.users.data.ForgotPasswordRequest;
+import com.only4play.backend.users.data.UpdateUserPasswordRequest;
 import com.only4play.backend.users.data.UserResponse;
 import com.only4play.backend.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,17 @@ public class UsersController {
         userService.forgotPassword(req.getEmail());
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * Reset the password of an existing user, uses the password reset token
+     * <p>
+     * Only allowed with the password reset token
+     */
+    @PatchMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@Valid @RequestBody UpdateUserPasswordRequest requestDTO) {
+        userService.resetPassword(requestDTO);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
