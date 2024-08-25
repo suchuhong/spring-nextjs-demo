@@ -38,6 +38,7 @@ public class SecurityConfiguration {
             .antMatchers(HttpMethod.POST, "/api/users/forgot-password").permitAll()
             .antMatchers(HttpMethod.GET, "/api/users/verify-email").permitAll()
             .antMatchers(HttpMethod.PATCH, "/api/users/reset-password").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/auth/csrf").permitAll()
             .anyRequest().authenticated();
 
     http.exceptionHandling(customizer -> {

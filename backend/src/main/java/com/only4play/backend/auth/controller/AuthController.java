@@ -38,4 +38,15 @@ public class AuthController {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * We don't have to do anything in this endpoint, the CsrfFilter will handle it.
+   * This endpoint should be invoked by the frontend to get the CSRF token.
+   * 浏览器发送的 OPTIONS 请求（预检请求）用于检查目标服务器是否允许这个跨域请求。
+   * 服务器需要返回 Access-Control-Allow-Origin 头部，指示哪些源（origin）被允许发起请求。
+   */
+  @GetMapping("/csrf")
+  public ResponseEntity<?> csrf() {
+    return ResponseEntity.ok().build();
+  }
+
 }

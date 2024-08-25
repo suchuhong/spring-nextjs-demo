@@ -46,7 +46,7 @@ app:
     password: password
     host: localhost
     port: 3316
-  allowed-origins: http://localhost
+  allowed-origins: http://localhost:3000
   application-name: starter-kit
   base-url: http://localhost:8999
   login-page-url: ${app.base-url}/auth/login
